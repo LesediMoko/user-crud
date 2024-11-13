@@ -1,5 +1,5 @@
 import { api } from "encore.dev/api";
-import { User, UserList } from "./types/userTypes";
+import { InsertUser, User, UserList } from "./types/userTypes";
 import { userListMock } from "./utils/mocks";
 import { IRootResponse } from "./types/responseTypes";
 import { SQLDatabase } from "encore.dev/storage/sqldb";
@@ -19,8 +19,9 @@ export const getUsers = api({method: "GET", path: "/users"}, async () : Promise<
     return {users : usersData}
 })
 
-export const createUser = api({method: "POST", path: "/user"}, async(newUser: User) : Promise<User> => {
-    return newUser
+export const createUser = api({method: "POST", path: "/user"}, async(newUser: InsertUser) : Promise<User> => {
+    const [newUserResponse] = await usersTable().insert(newUser).returning("*")
+    return newUserResponse 
 })
 
 export const rootRoute = api({method: "GET", path: "/api"}, async () : Promise<IRootResponse> => {
