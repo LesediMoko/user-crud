@@ -4,13 +4,13 @@ export const userListMock : UserList= {
     users: [
         {
             id: 1,
-            name: "Alice",
+            username: "Alice",
             email: "alice@example.com",
             password: "1234"
         },
         {
             id: 2,
-            name: "Bob",
+            username: "Bob",
             email: "Bob@example.com",
             password: "5678"
         },
