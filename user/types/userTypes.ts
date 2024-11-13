@@ -8,3 +8,9 @@ export interface User {
 export interface UserList {
     users: User[];
 }
+
+export interface InsertUser {
+    username: string;
+    email: string;
+    password: string;
+}
