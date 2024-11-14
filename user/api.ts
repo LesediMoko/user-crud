@@ -48,3 +48,8 @@ export const deleteUser = api({method: "DELETE", path: "/user/:username"}, async
 export const rootRoute = api({method: "GET", path: "/api"}, async () : Promise<IRootResponse> => {
     return {message : "Welcome to Encore.ts"}
 })
+
+export const getUser = api({method: "GET", path: "/user/:username"}, async({username} : {username: string}) : Promise<User> => {
+    const [user] = await usersTable().where("username", username)
+    return user
+})
