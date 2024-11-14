@@ -35,7 +35,15 @@ export const updateUser = api({method: "PATCH", path: "/user/:username"}, async(
     }
     const [updatedUser] = await usersTable().where("username", username).update(newUserData).returning("*")
     return updatedUser
-    })
+})
+
+export const deleteUser = api({method: "DELETE", path: "/user/:username"}, async({username} : {username: string}) : Promise<User> => {
+    if (username == "") {
+        throw new Error("username is required")
+    }
+    const [deletedUser] = await usersTable().where("username", username).del().returning("*")
+    return deletedUser
+})
 
 export const rootRoute = api({method: "GET", path: "/api"}, async () : Promise<IRootResponse> => {
     return {message : "Welcome to Encore.ts"}
