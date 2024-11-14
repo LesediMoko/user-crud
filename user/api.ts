@@ -1,9 +1,11 @@
 import { api } from "encore.dev/api";
-import { InsertUser, User, UserList } from "./types/userTypes";
+import { InsertUser, OptionalUser, PartialUser, User, UserList } from "./types/userTypes";
 import { userListMock } from "./utils/mocks";
 import { IRootResponse } from "./types/responseTypes";
 import { SQLDatabase } from "encore.dev/storage/sqldb";
 import knex from "knex";
+import { RequireAtLeastOne } from "./types/genericTypes";
+import { IUpdateUserRequest } from "./types/requestTypes";
 
 const db = new SQLDatabase("encore_users_db", {migrations: "./migrations"})
 
@@ -23,6 +25,17 @@ export const createUser = api({method: "POST", path: "/user"}, async(newUser: In
     const [newUserResponse] = await usersTable().insert(newUser).returning("*")
     return newUserResponse 
 })
+
+export const updateUser = api({method: "PATCH", path: "/user/:username"}, async({username, newUserData} : IUpdateUserRequest) : Promise<User> => {
+    if (username == "") {
+        throw new Error("username is required")
+    }
+    if (newUserData && Object.keys(newUserData).length === 0) {
+        throw new Error("At least one field is required")
+    }
+    const [updatedUser] = await usersTable().where("username", username).update(newUserData).returning("*")
+    return updatedUser
+    })
 
 export const rootRoute = api({method: "GET", path: "/api"}, async () : Promise<IRootResponse> => {
     return {message : "Welcome to Encore.ts"}
